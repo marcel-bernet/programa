@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert d'Hivern - Programa Interactiu</title>
+    <style>
+        /* ESTILS GENERALS */
+        body {
+            background: linear-gradient(180deg, #E53935 0%, #B71C1C 100%);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            padding-bottom: 60px;
+        }
+
+        /* ICONES DE CAPÇALERA */
+        .header-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        .icon svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* TÍTOLS */
+        h1 {
+            font-family: 'Rockwell', 'Courier New', serif;
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .info-concert {
+            background-color: white;
+            color: #B71C1C;
+            padding: 10px 20px;
+            border-radius: 50px; /* Més rodó, estil botó */
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .instruction {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* SECCIONS */
+        .group-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(255,255,255,0.5);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .credits {
+            font-size: 1rem;
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        /* LLISTA INTERACTIVA */
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        li {
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            cursor: pointer; /* Indica que és clicable */
+            position: relative;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .song-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .song-info {
+            padding-right: 10px;
+        }
+
+        .song-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .song-author {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Fletxa desplegable */
+        .arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+
+        /* Estat desplegat */
+        li.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* CURIOSITAT (AMAGADA PER DEFECTE) */
+        .curiosity {
+            display: none;
+            margin-top: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            border-left: 3px solid #fff;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* PEU */
+        .footer {
+            margin-top: 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-icons">
+            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="14" r="8"></circle><path d="M12 6v-3m-2 0h4"></path></svg></div>
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 18h18v3H3zM15 4a4 4 0 0 0-4 4v10h10V9a5 5 0 0 0-5-5z"></path><circle cx="20" cy="5" r="3"></circle></svg></div>
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2L4 12h5l-4 8h14l-4-8h5L12 2z"></path><path d="M12 20v2"></path></svg></div>
+            <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"></rect><rect x="4" y="12" width="16" height="8"></rect><path d="M12 8v12"></path><path d="M12 8C12 4 8 4 8 8"></path><path d="M12 8c0-4 4-4 4 0"></path></svg></div>
+        </div>
+
+        <h1>Concert<br>d'Hivern</h1>
+        
+        <div class="info-concert">
+            14 DE DESEMBRE | 18 H<br>
+            ATENEU DEL CLOT
+        </div>
+
+        <div class="instruction">
+            (Clica damunt les cançons per descobrir-ne curiositats)
+        </div>
+
+        <div class="group-section">
+            <h2>La Kurral</h2>
+            <div class="credits">
+                Piano: Caterina Clos Bassedas<br>
+                Direcció: Sheila Garcia Barba
+            </div>
+            <ul>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">I dreamed a dream</span>
+                            <span class="song-author">Schönberg (Arr: Ed Lojeski)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Tot i ser un clàssic de Broadway, l'obra original es va escriure en francès el 1980 i no va triomfar fins que es va traduir a l'anglès anys després.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Do You Hear the People Sing?</span>
+                            <span class="song-author">Claude-Michel Schönberg</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Aquesta cançó ha traspassat el teatre per convertir-se en un himne de protesta real en manifestacions de tot el món.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">L'amo de son carabassa</span>
+                            <span class="song-author">Popular de Menorca (Arr: M. Portas)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Una cançó tradicional que explica, amb ironia, com un pare rebutja el pretendent de la seva filla perquè el noi no té diners.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Jina lako</span>
+                            <span class="song-author">Cançó espiritual d'Àfrica</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">En suahili significa "El teu nom". És una cançó de lloança molt alegre i popular a Kènia i Tanzània.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Goodnight sweetheart</span>
+                            <span class="song-author">Carter i Hudson (Arr: Robert Sund)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Un clàssic del "Doo-wop" dels anys 50. Fixeu-vos en el baix, que porta el ritme fent el famós "dudut, dudut".</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Sará perché ti amo</span>
+                            <span class="song-author">Ricchi e Poveri (Arr: Sheila Garcia)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Estrenada al Festival de Sanremo del 1981, avui dia torna a ser un fenomen viral a les discoteques i estadis de futbol.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Hakuna matata</span>
+                            <span class="song-author">Elton John i Tim Rice</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">La frase prové de l'idioma suahili i literalment significa "No hi ha problemes" o "Cap angoixa".</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Supercalifragilisticexpialidosos</span>
+                            <span class="song-author">Germans Sherman</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Els compositors van trigar dues setmanes a inventar-se la paraula. És el que dius quan no saps què dir!</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="group-section">
+            <h2>Da Capo</h2>
+            <ul>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Ojalá que llueva cafe</span>
+                            <span class="song-author">Juan Luis Guerra (Arr: Fernando Moruja)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Una metàfora poètica sobre l'esperança i la prosperitat per a la gent treballadora del camp a la República Dominicana.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Mais que nada</span>
+                            <span class="song-author">Jorge Ben / S. Mendes</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">L'expressió brasilera no vol dir "més que res", sinó que és una exclamació tipus: "Vinga va!" o "I ara! Que no!".</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Simple Mass - Kyrie</span>
+                            <span class="song-author">Antonio Lotti</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">El "Kyrie" és l'única part de la missa llatina tradicional que es canta en grec ("Kýrie eléison", Senyor tingueu pietat).</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Muntanyes Del Canigó</span>
+                            <span class="song-author">Popular Catalana (Arr. Dani Puig)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Originalment era una cançó d'amor trista, però durant la Renaixença es va convertir en un potent símbol patriòtic.</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">In this heart</span>
+                            <span class="song-author">Sinéad O'Connor</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Una pregària moderna escrita per ser cantada sense instruments. Recentment s'ha fet molt famosa per la sèrie "Peaky Blinders".</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Gran Manual per identificar Ocells</span>
+                            <span class="song-author">El Pony Pisador (Arr. Marcel Bernet)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">El grup català de moda fa una llista d'ocells reals, però amb descripcions humorístiques. Pareu atenció a la lletra!</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Mulan - Voy a Hacer Todo Un Hombre de Ti</span>
+                            <span class="song-author">Wilder & Zippel (Arr. Marc Urrutia)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Dada curiosa: a la pel·lícula original, l'actor Jackie Chan va ser qui va cantar aquesta cançó en la versió xinesa (mandarí i cantonès).</div>
+                </li>
+                <li onclick="toggleCuriosity(this)">
+                    <div class="song-header">
+                        <div class="song-info">
+                            <span class="song-title">Pink pony club</span>
+                            <span class="song-author">Chappell Roan (Arr. M. Urrutia)</span>
+                        </div>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="curiosity">Un èxit recentíssim que parla de trobar el teu lloc al món i la llibertat de ser un mateix a la pista de ball.</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            — Taquilla Inversa —
+        </div>
+
+    </div>
+
+    <script>
+        function toggleCuriosity(element) {
+            // Tanca els altres (opcional, si vols que només se n'obri un a la vegada)
+            // Descomenta les 3 línies següents si vols aquest efecte:
+            // document.querySelectorAll('li.active').forEach(item => {
+            //    if (item !== element) item.classList.remove('active');
+            // });
+
+            // Obre/Tanca l'actual
+            element.classList.toggle('active');
+            
+            // Gestiona la visibilitat del text
+            var content = element.querySelector('.curiosity');
+            if (element.classList.contains('active')) {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

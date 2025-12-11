@@ -21,7 +21,7 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
         /* ICONES DE CAPÇALERA */
@@ -56,7 +56,7 @@
             background-color: white;
             color: #B71C1C;
             padding: 10px 20px;
-            border-radius: 50px; /* Més rodó, estil botó */
+            border-radius: 50px;
             font-weight: bold;
             margin-bottom: 20px;
             display: inline-block;
@@ -108,7 +108,7 @@
             margin-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.2);
             padding-bottom: 15px;
-            cursor: pointer; /* Indica que és clicable */
+            cursor: pointer;
             position: relative;
         }
 
@@ -139,19 +139,16 @@
             margin-top: 2px;
         }
 
-        /* Fletxa desplegable */
         .arrow {
             font-size: 0.8rem;
             transition: transform 0.3s ease;
             opacity: 0.7;
         }
 
-        /* Estat desplegat */
         li.active .arrow {
             transform: rotate(180deg);
         }
 
-        /* CURIOSITAT (AMAGADA PER DEFECTE) */
         .curiosity {
             display: none;
             margin-top: 10px;
@@ -169,15 +166,58 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* PEU */
+        /* TAQUILLA INVERSA / BIZUM */
         .footer {
             margin-top: 40px;
-            font-size: 1.1rem;
+            background-color: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
             font-weight: bold;
-            opacity: 0.9;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #B71C1C;
         }
+
+        .bizum-btn {
+            background-color: #00bfd6; /* Blau corporatiu Bizum aprox, o pots posar un altre color */
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.1s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 250px;
+            justify-content: center;
+        }
+
+        .bizum-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .bizum-btn.copied {
+            background-color: #4CAF50; /* Verd quan s'ha copiat */
+        }
+
+        .bizum-note {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
     </style>
 </head>
 <body>
@@ -381,29 +421,51 @@
         </div>
 
         <div class="footer">
-            — Taquilla Inversa —
+            <div class="footer-title">Taquilla Inversa</div>
+            
+            <button class="bizum-btn" onclick="copiarBizum('649 161 799')">
+                <span id="bizum-text">Fer Bizum</span>
+                <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+            
+            <div class="bizum-note">Clica per copiar el número i obre la teva app del banc</div>
         </div>
 
     </div>
 
     <script>
+        // Funció per les curiositats
         function toggleCuriosity(element) {
-            // Tanca els altres (opcional, si vols que només se n'obri un a la vegada)
-            // Descomenta les 3 línies següents si vols aquest efecte:
-            // document.querySelectorAll('li.active').forEach(item => {
-            //    if (item !== element) item.classList.remove('active');
-            // });
-
-            // Obre/Tanca l'actual
             element.classList.toggle('active');
-            
-            // Gestiona la visibilitat del text
             var content = element.querySelector('.curiosity');
             if (element.classList.contains('active')) {
                 content.style.display = "block";
             } else {
                 content.style.display = "none";
             }
+        }
+
+        // Funció pel Bizum
+        function copiarBizum(numero) {
+            // Elimina espais per copiar només els números
+            var numeroNet = numero.replace(/\s/g, '');
+            
+            navigator.clipboard.writeText(numeroNet).then(function() {
+                var btn = document.querySelector('.bizum-btn');
+                var text = document.getElementById('bizum-text');
+                
+                // Canvia l'estil per indicar èxit
+                btn.classList.add('copied');
+                text.innerText = "Número Copiat!";
+                
+                // Torna a l'estat original després de 3 segons
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    text.innerText = "Fer Bizum";
+                }, 3000);
+            }, function(err) {
+                alert('No s\'ha pogut copiar automàticament. El número és: ' + numero);
+            });
         }
     </script>
 </body>
